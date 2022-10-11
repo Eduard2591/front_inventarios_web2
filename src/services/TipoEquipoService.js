@@ -1,7 +1,9 @@
 import { axiosConfig } from "../configuration/axiosConfig"
 
-//obtener tipos de equipos 
-const obtenerTiposEquipos = ( estado = true ) => {
+/**
+ * Obtiene todos los tipos de equipo
+ */
+const obtenerTiposEquipos = (estado = true) => {
     return axiosConfig.get('tipoequipos?estado='+estado, {
         headers: {
             'Content-type': 'application/json'
@@ -9,17 +11,21 @@ const obtenerTiposEquipos = ( estado = true ) => {
     })
 }
 
-// crear un tipo de equipo 
-const crearTipoEquipo = ( data ) => {
-    return axiosConfig.get('tipoequipos', data, {
+/**
+ * Crea tipo de equipo
+ */
+const crearTipoEquipo = (data) => {
+    return axiosConfig.post ('tipoequipos', data, {
         headers: {
             'Content-type': 'application/json'
         }
     })
 }
 
-//editar tipo equipo por ID
-const editarTipoEquipoporID = (tipoId, data ) => {
+/**
+ * Actualiza un tipo de equipo por ID
+ */
+const editarTipoEquipoPorID = (tipoId, data) => {
     return axiosConfig.put('tipoequipos/'+tipoId, data, {
         headers: {
             'Content-type': 'application/json'
@@ -27,18 +33,21 @@ const editarTipoEquipoporID = (tipoId, data ) => {
     })
 }
 
-
-//Borra un tipo de equipo por ID
-const borrarTipoEquipoPorID = (tipoId) => {
+/**
+ * Borra un tipo de equipo por ID
+ */
+ const borrarTipoEquipoPorID = (tipoId) => {
     return axiosConfig.delete('tipoequipos/'+tipoId, {}, {
         headers: {
             'Content-type': 'application/json'
         }
     })
 }
- 
-//Consulta un tipo de equipo por ID
-const obtenerTipoEquipoPorID = (tipoId) => {
+
+/**
+ * Consulta un tipo de equipo por ID
+ */
+ const obtenerTipoEquipoPorID = (tipoId) => {
     return axiosConfig.get('tipoequipos/'+tipoId, {
         headers: {
             'Content-type': 'application/json'
@@ -46,11 +55,10 @@ const obtenerTipoEquipoPorID = (tipoId) => {
     })
 }
 
- 
 export {
     obtenerTiposEquipos,
     crearTipoEquipo,
-    editarTipoEquipoporID,
+    editarTipoEquipoPorID,
     borrarTipoEquipoPorID,
     obtenerTipoEquipoPorID
 }

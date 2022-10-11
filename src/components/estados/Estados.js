@@ -1,31 +1,30 @@
 import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
-import { borrarTipoEquipoPorID, crearTipoEquipo, editarTipoEquipoPorID, obtenerTiposEquipos } from '../../services/TipoEquipoService'
+import { borrarEstadoPorID, crearEstado, editarEstadoPorID, obtenerEstados } from '../../services/EstadoService'
 import HeaderTable from '../ui/HeaderTable'
 import Modal from '../ui/Modal'
 
-export default function TipoEquipos() {
-
-  const [tipoEquipos, setTipoEquipos] = useState([])
+export default function Estados() {
+  const [estados, setEstados] = useState([])
   const [loading, setLoading] = useState(false)
   const [query, setQuery] = useState(true)
   const [error, setError] = useState(false)
-  const [tipoEquipo, setTipoEquipo] = useState({
+  const [estado, setEstado] = useState({
     nombre: '',
     estado: true
   })
-  const [ errorSend, setErrorSend ] = useState({
+  const [errorSend, setErrorSend] = useState({
     status: false,
     msg: ''
   })
   //const [tipoId, setTipoId] = useState('')
 
-  const listTipoEquipos = async () => {
+  const listEstados= async () => {
     setLoading(true)
     try{
       setError(false)
-      const { data } = await obtenerTiposEquipos(query)
-      setTipoEquipos(data)
+      const { data } = await obtenerEstados(query)
+      setEstados(data)
       setLoading(false)
     }catch(e){
       console.log(e)
@@ -35,50 +34,47 @@ export default function TipoEquipos() {
   }
 
   useEffect(() => {
-    listTipoEquipos();
+    listEstados();
   }, [query])
 
   const cambiarSwitche = () => {
     setQuery(!query)
   }
 
-  const guardarTipoEquipo = async () => {
+  const guardarEstado = async () => {
     setErrorSend({status: false, msg: ''})
     setLoading(true)
     try{
-      const res = await crearTipoEquipo(tipoEquipo)
+      const res = await crearEstado(estado)
       console.log(res)
-      setLoading(false)
-      setTipoEquipo({nombre: ''})
-      listTipoEquipos()
+      setLoading(true)
+      setEstado({nombre: ''})
+      listEstados()
     }catch(e){
-      const {data} = e.response;
-      /*if(status == 400){
-        console.log(data.msg)
-        
-      }*/
+      const {status, data} = e.response;
       setErrorSend({status: true, msg: data.msg})
       console.log(e)
       setLoading(false)
     }
+    
   }
 
   const handleChange = e => {
-    setTipoEquipo({
-      ...tipoEquipo, 
+    setEstado({
+      ...estado, 
       [e.target.name]: e.target.value
     })
   }
 
-  const borrarTipoEquipo = async (e) => {
+  const borrarEstado = async (e) => {
     setLoading(true)
     try{
       setError(false)
       const id = e.target.id
       console.log(id)
-      const res = await borrarTipoEquipoPorID(id)
+      const res = await borrarEstadoPorID(id)
       console.log(res)
-      listTipoEquipos();
+      listEstados();
       setLoading(false)
     }catch(e){
       console.log(e)
@@ -87,15 +83,15 @@ export default function TipoEquipos() {
     }
   }
 
-  const editarTipoEquipo = async (e) => {
+  const editarEstado = async (e) => {
     e.preventDefault()
     setLoading(true)
     try{
       setError(false)
-      const resp = await editarTipoEquipoPorID(tipoEquipo._id, tipoEquipo);
+      const resp = await editarEstadoPorID(estado._id, estado);
       console.log(resp)
-      resetTipoEquipo()
-      listTipoEquipos()
+      resetEstado()
+      listEstados()
     }catch(e){
       setLoading(false)
       console.log(e)
@@ -104,16 +100,16 @@ export default function TipoEquipos() {
 
   }
 
-  const setTipoPorId = (e) => {
+  const setEstadoPorId = (e) => {
     console.log(e.target.id)
-    const tiposFilter = tipoEquipos.filter(t => t._id === e.target.id);
-    const tipo = tiposFilter[0];
-    console.log(tipo)
-    setTipoEquipo(tipo)
+    const estadosFilter = estados.filter(t => t._id == e.target.id);
+    const est = estadosFilter[0];
+    console.log(est)
+    setEstado(est)
   }
 
-  const resetTipoEquipo =() => {
-    setTipoEquipo({
+  const resetEstado =() => {
+    setEstado({
       nombre: '',
       estado: true
     })
@@ -125,32 +121,32 @@ export default function TipoEquipos() {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModal2Label">Editar TipoEquipo</h5>
+                <h5 className="modal-title" id="exampleModal2Label">Editar Estado</h5>
                 <button 
                   type="button" 
                   className="btn-close" 
                   data-bs-dismiss="modal" 
                   aria-label="Close"
-                  onClick={resetTipoEquipo}
+                  onClick={resetEstado}
                 ></button>
               </div>
               <div className="modal-body">
-                <form onSubmit={editarTipoEquipo}>
+                <form onSubmit={editarEstado}>
                   <div className="mb-3">
-                    <label htmlFor="recipient-name" className="col-form-label">Nombre:</label>
+                    <label for="recipient-name" className="col-form-label">Nombre:</label>
                     <input 
                       type="text" 
                       className="form-control" 
                       id="recipient-name"
                       onChange={handleChange}
-                      value={tipoEquipo.nombre}
+                      value={estado.nombre}
                       name="nombre"
                     />
                     <select 
-                      className="form-select" 
+                      class="form-select" 
                       aria-label="Default select example"
                       name="estado"
-                      value={tipoEquipo.estado}
+                      value={estado.estado}
                       onChange={handleChange}
                     >
                       <option value={false}>Inactivo</option>
@@ -161,14 +157,14 @@ export default function TipoEquipos() {
                     type="button" 
                     className="btn btn-secondary" 
                     data-bs-dismiss="modal"
-                    onClick={resetTipoEquipo}
+                    onClick={resetEstado}
                   >
                     Cerrar
                   </button>
                   <button 
                     type="submit" 
                     className="btn btn-primary" 
-                    disabled={tipoEquipo.nombre.length <= 0}
+                    disabled={estado.nombre.length <= 0}
                     data-bs-dismiss="modal"
                   >
                     Enviar
@@ -181,9 +177,9 @@ export default function TipoEquipos() {
           </div>
         </div>
         <Modal 
-          titulo={'Tipo de Equipo'}
-          guardar={guardarTipoEquipo}
-          element={tipoEquipo}
+          titulo={'Estado'}
+          guardar={guardarEstado}
+          element={estado}
           change={handleChange}
         />
         <button 
@@ -203,7 +199,7 @@ export default function TipoEquipos() {
             checked={query}
             onChange={cambiarSwitche}
           />
-          <label className="form-check-label" htmlFor="flexSwitchCheckChecked">( Inactivo / Activo )</label>
+          <label className="form-check-label" hmtlFor="flexSwitchCheckChecked">( Inactivo / Activo )</label>
         </div>
         {
           loading && 
@@ -213,7 +209,7 @@ export default function TipoEquipos() {
           </div>
           </div>)
         }
-        { errorSend.status && (
+        {errorSend.status && (
         <div className="alert alert-danger" role="alert">
           {errorSend.msg}
           </div>)
@@ -228,30 +224,30 @@ export default function TipoEquipos() {
         <HeaderTable />
         <tbody>
           {
-            tipoEquipos.map((tipoEquipo,index) => {
+            estados.map((estado,index) => {
               return (
-              <tr key={tipoEquipo._id}>
+              <tr key={estado._id}>
                 <th scope="row">{index + 1}</th>
-                <td>{tipoEquipo.nombre}</td>
-                <td>{tipoEquipo.estado ? 'Activo': 'Inactivo'}</td>
-                <td>{dayjs(tipoEquipo.fechaCreacion).format('YYYY-MM-DD')}</td>
-                <td>{dayjs(tipoEquipo.fechaActualizacion).format('YYYY-MM-DD')}</td>
+                <td>{estado.nombre}</td>
+                <td>{estado.estado ? 'Activo': 'Inactivo'}</td>
+                <td>{dayjs(estado.fechaCreacion).format('YYYY-MM-DD')}</td>
+                <td>{dayjs(estado.fechaActualizacion).format('YYYY-MM-DD')}</td>
                 <td>
                   <button 
-                    id={tipoEquipo._id}
+                    id={estado._id}
                     type="button" 
                     className="btn btn-success"
                     data-bs-toggle="modal" 
                     data-bs-target="#exampleModal2"
-                    onClick={setTipoPorId}
+                    onClick={setEstadoPorId}
                   >
                     Editar
                   </button>
                   <button 
-                    id={tipoEquipo._id}
+                    id={estado._id}
                     type="button" 
                     className="btn btn-danger"
-                    onClick={borrarTipoEquipo}
+                    onClick={borrarEstado}
                   >
                     Borrar
                   </button>

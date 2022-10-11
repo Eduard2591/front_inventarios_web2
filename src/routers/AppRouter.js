@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Estado from '../components/estados/Estado'
+import Estado from '../components/estados/Estados'
 import Inventarios from '../components/inventarios/Inventarios'
 import Marcas from '../components/marcas/Marcas'
 import TipoEquipos from '../components/tiposequipos/TipoEquipos'
